@@ -5,7 +5,7 @@ const _InputBookYear = document.getElementById("inputBookYear"); // input tahun
 const CheckBoxsBooks = document.getElementById("inputBookIsComplete"); // tombol selesai baca
 const ButtonSubmit = document.getElementById("bookSubmit"); // tombol masukkan
 const FormInputBuku = document.getElementById("inputBook"); // form input
-const SearchInput = document.getElementById("searchBookTitle"); // kolom input cari buku
+
 const ButtonSearch = document.getElementById("searchSubmit"); // button cari buku
 const FormSearchBook = document.getElementById("searchBook"); // form cari buku
 
@@ -20,23 +20,35 @@ document.addEventListener("DOMContentLoaded", function () {
     addBooks();
   });
 
-  // ButtonSearch.addEventListener("click", function (e) {
-  //   e.preventDefault();
-  //   findBook();
-  // });
+  ButtonSearch.addEventListener("click", function (e) {
+    e.preventDefault();
+    findBook();
+  });
 
-  // function findBook() {
-  //   const Filter = Books.filter((item) => {
-  //     return item.judul.include(SearchInput);
-  //   });
-  //   console.log(Filter);
-  // }
+  // function cari Buku berdasarkan kata kunci di input box
+  function findBook() {
+    const searchInput = document.getElementById("searchBookTitle").value.toLowerCase(); // kolom input cari buku
+    const allElementBooks = document.querySelectorAll(".book_item > h3");
+
+    for (const bookElement of allElementBooks) {
+      const bookTitle = bookElement.innerText.toLowerCase();
+      const bookContainer = bookElement.parentElement;
+
+      if (bookTitle.includes(searchInput)) {
+        // Jika judul buku cocok dengan pencarian, tampilkan elemen buku
+        bookContainer.style.display = "block";
+      } else {
+        // Jika judul buku tidak cocok dengan pencarian, sembunyikan elemen buku
+        bookContainer.style.display = "none";
+      }
+    }
+  }
 
   // format penyimpanan data yg berupa objek
-  function InsertBook(id, judul, author, year, isComplete) {
+  function InsertBook(id, title, author, year, isComplete) {
     return {
       id,
-      judul,
+      title,
       author,
       year,
       isComplete,
@@ -92,7 +104,7 @@ document.addEventListener("DOMContentLoaded", function () {
   //Buat elemen dalam HTML
   function inputBook(books) {
     const Title = document.createElement("h3");
-    Title.innerText = books.judul; //
+    Title.innerText = books.title; //
 
     const Author = document.createElement("p");
     Author.innerText = books.author;
@@ -143,7 +155,7 @@ document.addEventListener("DOMContentLoaded", function () {
   function addBooks() {
     const ResultJudul = _InputJudul.value;
     const ResultAuthor = _InputBookAuthor.value;
-    const ResultYear = _InputBookYear.value;
+    const ResultYear = parseInt(_InputBookYear.value);
     const ResultCheckBox = CheckBoxsBooks.checked;
 
     const IdBooks = GenerateID();
@@ -208,5 +220,4 @@ document.addEventListener("DOMContentLoaded", function () {
   if (CheckLocaleStorage()) {
     GetdatafromLocalStorage();
   }
-  // console.log(Books);
 });
